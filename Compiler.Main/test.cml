@@ -1,0 +1,23 @@
+class Program
+{
+    def Write (a,b){
+    
+        8 + 5;
+    }
+
+    def Main(args)
+    {
+        5+5;
+        7-7;
+        4.5 / 4.5;
+        4 * 8.3;
+    }
+}
+
+class Animal{
+    
+    let A = 5;
+
+    \
+
+}
