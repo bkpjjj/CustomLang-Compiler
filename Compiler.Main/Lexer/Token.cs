@@ -18,7 +18,8 @@
         TT_IDENTIFIER,
         TT_COMMA,
         TT_EQ,
-        TT_EOL
+        TT_EOL,
+        TT_STRING
     }
 
     public static class KeyWords
@@ -27,7 +28,9 @@
         {
             "class",
             "def",
-            "let"
+            "let",
+            "include",
+            "pass"
         };
     }
     public class Token

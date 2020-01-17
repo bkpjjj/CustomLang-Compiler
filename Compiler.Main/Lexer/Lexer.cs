@@ -34,6 +34,8 @@ namespace Compiler.Main.Lex
             List<Token> tokens = new List<Token>();
             do
             {
+                if (current_char == '"')
+                    tokens.Add(MakeStringToken());
                 if (char.IsLetter(current_char))
                     tokens.Add(MakeWordToken());
                 if (char.IsDigit(current_char))
@@ -90,6 +92,21 @@ namespace Compiler.Main.Lex
                 }
             } while (Next());
             return tokens.ToArray();
+        }
+        
+        private Token MakeStringToken()
+        {
+            string word = "";
+            bool canNext = true;
+            Next();
+            while (current_char != '"' && canNext) 
+            {
+                word += current_char;
+
+                canNext = Next();
+            } 
+            Next();
+            return new Token(TokenType.TT_STRING, word);
         }
 
         private Token MakeDigitToken()

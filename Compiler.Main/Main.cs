@@ -36,7 +36,11 @@ namespace Compiler.Main
         }
         static void Main(string[] args)
         {
+#if DEBUG
             string code = File.ReadAllText(@"E:\source\repos\CML\Compiler.Main\test.cml");
+#else
+            string code = args[0];
+#endif
 
             Lexer lex = new Lexer(code);
 

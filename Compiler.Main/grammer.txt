@@ -1,0 +1,10 @@
+VAR:	KEYWORD    - let
+		IDENTIFIER - word
+		EQ		   - =
+		VALUE      - VALUE_TYPE
+		EOL		   - ;
+
+CLASS:  KETWORD    - class
+		IDENTIFIER - word
+		BODY       - {}
+		
