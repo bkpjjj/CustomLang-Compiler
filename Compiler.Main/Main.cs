@@ -1,5 +1,6 @@
 ﻿using Compiler.Main.Errors;
 using Compiler.Main.Lex;
+using Compiler.Main.Parser;
 using System;
 using System.IO;
 
@@ -53,6 +54,14 @@ namespace Compiler.Main
             else
             {
                 WriteTokens(tokens);
+
+                AST parser = new AST(tokens);
+
+                ASTTree tree = parser.GetASTTree(out Error treeError);
+                if (treeError != null)
+                    Console.WriteLine(treeError);
+                else
+                    Console.WriteLine(tree);
             }
 
             Console.ReadKey();

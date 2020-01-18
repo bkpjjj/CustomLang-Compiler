@@ -10,12 +10,16 @@ namespace Compiler.Main.Lex
     class Lexer
     {
         private string code;
-        private Position position;
+        private TokenPosition position;
         private char current_char { get { return code[position.Index]; } set { current_char = value; } }
-
+        private bool canNext;
         public Lexer(string code)
         {
             this.code = code;
+            if (code.Length > 0)
+                canNext = true;
+            else
+                canNext = false;
         }
 
         public bool Next()
@@ -36,10 +40,12 @@ namespace Compiler.Main.Lex
             {
                 if (current_char == '"')
                     tokens.Add(MakeStringToken());
-                if (char.IsLetter(current_char))
+                if (char.IsLetter(current_char) || current_char == '_')
                     tokens.Add(MakeWordToken());
                 if (char.IsDigit(current_char))
                     tokens.Add(MakeDigitToken());
+                if (!canNext)
+                    break;
                 switch (current_char)
                 {
                     case ' ':
@@ -48,48 +54,51 @@ namespace Compiler.Main.Lex
                     case '\t':
                         continue;
                     case '+':
-                        tokens.Add(new Token(TokenType.TT_PLUS));
+                        tokens.Add(new Token(TokenType.TT_PLUS,position));
                         break;
                     case '-':
-                        tokens.Add(new Token(TokenType.TT_MINUS));
+                        tokens.Add(new Token(TokenType.TT_MINUS, position));
                         break;
                     case '*':
-                        tokens.Add(new Token(TokenType.TT_MUL));
+                        tokens.Add(new Token(TokenType.TT_MUL, position));
                         break;
                     case '/':
-                        tokens.Add(new Token(TokenType.TT_DIV));
+                        tokens.Add(new Token(TokenType.TT_DIV, position));
                         break;
                     case '{':
-                        tokens.Add(new Token(TokenType.TT_LCBRACE));
+                        tokens.Add(new Token(TokenType.TT_LCBRACE, position));
                         break;
                     case '}':
-                        tokens.Add(new Token(TokenType.TT_RSBRACLET));
+                        tokens.Add(new Token(TokenType.TT_RSBRACLET, position));
                         break;
                     case '[':
-                        tokens.Add(new Token(TokenType.TT_LSBRACKET));
+                        tokens.Add(new Token(TokenType.TT_LSBRACKET, position));
                         break;
                     case ']':
-                        tokens.Add(new Token(TokenType.TT_RSBRACLET));
+                        tokens.Add(new Token(TokenType.TT_RSBRACLET, position));
                         break;
                     case '(':
-                        tokens.Add(new Token(TokenType.TT_LPAREN));
+                        tokens.Add(new Token(TokenType.TT_LPAREN, position));
                         break;
                     case ')':
-                        tokens.Add(new Token(TokenType.TT_RPAREN));
+                        tokens.Add(new Token(TokenType.TT_RPAREN, position));
                         break;
                     case ',':
-                        tokens.Add(new Token(TokenType.TT_COMMA));
+                        tokens.Add(new Token(TokenType.TT_COMMA, position));
                         break;
                     case '=':
-                        tokens.Add(new Token(TokenType.TT_EQ));
+                        tokens.Add(new Token(TokenType.TT_EQ, position));
                         break;
                     case ';':
-                        tokens.Add(new Token(TokenType.TT_EOL));
+                        tokens.Add(new Token(TokenType.TT_EOL, position));
+                        break;
+                    case '!':
+                        tokens.Add(new Token(TokenType.TT_NOT, position));
                         break;
                     default:
                         error = new IlligalCharError($" '{current_char}'", position);
                         return null;
-                }
+                }      
             } while (Next());
             return tokens.ToArray();
         }
@@ -97,7 +106,6 @@ namespace Compiler.Main.Lex
         private Token MakeStringToken()
         {
             string word = "";
-            bool canNext = true;
             Next();
             while (current_char != '"' && canNext) 
             {
@@ -106,41 +114,38 @@ namespace Compiler.Main.Lex
                 canNext = Next();
             } 
             Next();
-            return new Token(TokenType.TT_STRING, word);
+            return new Token(TokenType.TT_STRING, position, word);
         }
 
         private Token MakeDigitToken()
         {
             string word = "";
             int dotCount = 0;
-            bool canNext = true;
-            while ((char.IsDigit(current_char) || current_char == '.') && canNext)
+            do
             {
                 if (current_char == '.')
                     dotCount++;
                 if (dotCount > 1)
                     break;
                 word += current_char;
-
                 canNext = Next();
-            }
-            return dotCount == 0 ? new Token(TokenType.TT_INT, word) : new Token(TokenType.TT_FLOAT, word);
+            } while ((char.IsDigit(current_char) || current_char == '.') && canNext);
+            return dotCount == 0 ? new Token(TokenType.TT_INT, position, word) : new Token(TokenType.TT_FLOAT, position, word);
         }
 
         private Token MakeWordToken()
         {
             string word = "";
-            bool canNext = true;
-            while (char.IsLetterOrDigit(current_char) && canNext)
+            while ((char.IsLetterOrDigit(current_char) || current_char == '_') && canNext)
             {
                 word += current_char;
 
                 canNext = Next();
             }
             if (KeyWords.Items.Any(x => x == word))
-                return new Token(TokenType.TT_KEYWORD, word);
+                return new Token(TokenType.TT_KEYWORD, position, word);
             else
-                return new Token(TokenType.TT_IDENTIFIER, word);
+                return new Token(TokenType.TT_IDENTIFIER, position, word);
 
         }
     }

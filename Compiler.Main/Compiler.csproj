@@ -45,9 +45,11 @@
   <ItemGroup>
     <Compile Include="Error\Error.cs" />
     <Compile Include="Lexer\Lexer.cs" />
-    <Compile Include="Lexer\Position.cs" />
+    <Compile Include="Lexer\TokenPosition.cs" />
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Parser\AST.cs" />
+    <Compile Include="Parser\NodePosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interpreter\" />
-    <Folder Include="Parser\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="grammer.txt" />

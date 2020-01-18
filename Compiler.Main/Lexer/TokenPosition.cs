@@ -2,7 +2,7 @@
 
 namespace Compiler.Main.Lex
 {
-    internal struct Position
+    public struct TokenPosition
     {
         public int Index { get; private set; }
         public int Line { get; private set; }

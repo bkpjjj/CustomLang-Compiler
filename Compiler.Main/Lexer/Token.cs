@@ -19,7 +19,8 @@
         TT_COMMA,
         TT_EQ,
         TT_EOL,
-        TT_STRING
+        TT_STRING,
+        TT_NOT
     }
 
     public static class KeyWords
@@ -39,12 +40,26 @@
 
         public string Value { get; set; }
 
-        public Token(TokenType tokenType, string value = null)
+        public TokenPosition Position { get; set; }
+
+        public Token(TokenType tokenType,TokenPosition position, string value = null)
         {
             TokenType = tokenType;
             Value = value;
+            Position = position;
         }
 
+        public bool Match(TokenType type , string value = null)
+        {
+            if (value == null)
+                return TokenType == type;
+            return TokenType == type && Value == value;
+        }
+
+        public bool Match(Token token)
+        {
+            return Match(token.TokenType, token.Value);
+        }
         public override string ToString()
         {
             if(Value != null)

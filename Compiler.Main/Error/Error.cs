@@ -11,14 +11,14 @@ namespace Compiler.Main.Errors
     {
         public string Message { get; set; }
 
-        public Position Position { get; private set; }
+        public TokenPosition Position { get; private set; }
 
         public Error(string message)
         {
             Message = message;
         }
 
-        public Error(string message, Position position) : this(message)
+        public Error(string message, TokenPosition position) : this(message)
         {
             Position = position;
         }
@@ -31,7 +31,14 @@ namespace Compiler.Main.Errors
 
     class IlligalCharError : Error
     {
-        public IlligalCharError(string message, Position position) : base(message, position)
+        public IlligalCharError(string message, TokenPosition position) : base(message, position)
+        {
+        }
+    }
+
+    class IlligalSyntaxError : Error
+    {
+        public IlligalSyntaxError(string message, TokenPosition position) : base(message, position)
         {
         }
     }
